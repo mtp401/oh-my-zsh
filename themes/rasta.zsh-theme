@@ -1,6 +1,5 @@
 # Copyright (c) 2016 Matt Pelland (matt@pelland.io)
 # 
-# 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
 # the Software without restriction, including without limitation the rights to
@@ -23,19 +22,27 @@ ZSH_THEME_NVM_PREFIX="{%{$fg_bold[yellow]%}"
 ZSH_THEME_NVM_SUFFIX="%{$reset_color%}}"
 
 nvm_prompt_info () {
+    if [ ${ZSH_THEME_ENABLE_NVM_PROMPT:=0} -eq 0 ]; then
+        echo ""
+        return 0
+    fi
+
     which "nvm" > /dev/null 2>&1
 
     if [ $? -ne 0 ]; then
         echo ""
+        return 0
     fi
 
-    # local NVM_CURRENT="$(nvm current)"
+    local NVM_CURRENT="$(nvm current)"
 
-    # if [[ "$NVM_CURRENT" != "system" ]]; then
-    #     echo "${ZSH_THEME_NVM_PREFIX:=[}${NVM_CURRENT}${ZSH_THEME_NVM_SUFFIX:=]}"
-    # fi
+    if [[ "$NVM_CURRENT" != "system" ]]; then
+        echo "${ZSH_THEME_NVM_PREFIX:=[}${NVM_CURRENT}${ZSH_THEME_NVM_SUFFIX:=]}"
+        return 0
+    fi
 
     echo ""
+    return 0
 }
 
 prompt_info () {
@@ -45,9 +52,11 @@ prompt_info () {
 
     if [[ "x${PROMPT_INFO}" != "x" ]]; then
         echo " ${PROMPT_INFO}"
+        return 0
     fi
 
     echo ""
+    return 0
 }
 
 PROMPT='['\
