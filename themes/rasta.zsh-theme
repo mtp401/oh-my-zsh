@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Matt Pelland (matt@pelland.io)
+# Copyright 2016, 2025. Matt Pelland (matt@pelland.io). All Rights Reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -45,10 +45,29 @@ nvm_prompt_info () {
     return 0
 }
 
+ZSH_THEME_DISTROBOX_PREFIX="{%{$fg_bold[green]%}"
+ZSH_THEME_DISTROBOX_SUFFIX="%{$reset_color%}}"
+
+distrobox_prompt_info () {
+  if [ ${ZSH_THEME_ENABLE_DISTROBOX_PROMPT:=0} -eq 0 ]; then
+    echo ""
+    return 0
+  fi
+
+  if [ -z "${CONTAINER_ID}" ]; then
+    echo ""
+    return 0
+  fi
+
+  echo "${ZSH_THEME_DISTROBOX_PREFIX:=[}  ${CONTAINER_ID}${ZSH_THEME_DISTROBOX_SUFFIX:=]}"
+  return 0
+}
+
 prompt_info () {
     local PROMPT_INFO="$(git_prompt_info)"
     PROMPT_INFO="${PROMPT_INFO}$(virtualenv_prompt_info)"
     PROMPT_INFO="${PROMPT_INFO}$(nvm_prompt_info)"
+    PROMPT_INFO="${PROMPT_INFO}$(distrobox_prompt_info)"
     PROMPT_INFO="${PROMPT_INFO}$(vi_mode_prompt_info)"
 
     if [[ "x${PROMPT_INFO}" != "x" ]]; then
